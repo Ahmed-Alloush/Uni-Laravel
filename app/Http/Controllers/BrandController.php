@@ -4,7 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Brand\CreateBrandRequest;
-use App\Http\Requests\Brand\UpdateBrandRequest ;
+use App\Http\Requests\Brand\UpdateBrandRequest;
 use App\Models\Brand;
 
 use Illuminate\Http\JsonResponse;
@@ -45,7 +45,7 @@ class BrandController extends Controller
             // return response()->json([
             //     'success' => true,
             //     'message' => 'this is a dummy message create',
-               
+
             //     'validatited' => $request->validated(),
             // ], 200);
 
@@ -76,7 +76,7 @@ class BrandController extends Controller
     /**
      * Display the specified brand.
      */
-    public function show( $id): JsonResponse
+    public function show($id): JsonResponse
     {
         try {
             $category = Brand::findOrFail($id);
@@ -84,14 +84,12 @@ class BrandController extends Controller
                 'success' => true,
                 'data' => $category,
             ], 200);
-        }
-     catch (ModelNotFoundException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Brand not found',
-        ], 404);
-    }
-        catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Brand not found',
+            ], 404);
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch the Brand.',
@@ -103,7 +101,7 @@ class BrandController extends Controller
     /**
      * Update the specified brand in storage.
      */
-    public function update(UpdateBrandRequest $request, Brand $brand): JsonResponse
+    public function update(UpdateBrandRequest $request, $id): JsonResponse
     {
         try {
             // return response()->json([
@@ -113,7 +111,15 @@ class BrandController extends Controller
             //     'validatited' => $request->validated(),
             // ], 200);
 
-           
+
+            $brand = Brand::find($id);
+
+            if (!$brand) {
+                return response()->json([
+                    'error' => 'Brand not found',
+                ], 404);
+            }
+
 
             $brand->update($request->validated());
 
@@ -122,14 +128,12 @@ class BrandController extends Controller
                 'message' => 'Brand updated successfully.',
                 'data' => $brand,
             ], 200);
-        }
-        catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Brand not found',
             ], 404);
-        }
-        catch (QueryException $e) {
+        } catch (QueryException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update brand due to database error.',
@@ -147,16 +151,24 @@ class BrandController extends Controller
     /**
      * Remove the specified brand from storage.
      */
-    public function destroy(Brand $brand): JsonResponse
+    public function destroy($id): JsonResponse
     {
         try {
+            $brand = Brand::findOrFail($id);
+
+            if (!$brand) {
+                return response()->json([
+                    'erorr' => 'Brand not found',
+                    404
+                ]);
+            }
+
             $brand->deleteOrFail();
             return response()->json([
                 'success' => true,
                 'message' => 'Brand deleted successfully.',
             ], 200);
-        }
-        catch (QueryException $e) {
+        } catch (QueryException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete brand due to database constraints (e.g., foreign key issue).',
@@ -171,6 +183,3 @@ class BrandController extends Controller
         }
     }
 }
-
-
-

@@ -21,7 +21,7 @@ class CheckRole
         $user = $request->user(); // Assuming the authenticated user is available
 
         // Check if user has any of the required roles
-        if (!$user || !in_array($user->role->name, $roles)) {
+        if (!$user || !in_array($user->role, $roles)) {
             return response()->json(['message' => 'Forbidden: You don\'t have permission to access this resource.'], 403);
         }
 

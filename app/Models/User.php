@@ -18,15 +18,31 @@ class User extends Authenticatable
         'last_name',
         'phonenumber',
         'password',
-        'image_profile',
-        'location',
-        'role_id',
+        'email',
+        'image',
+        'location_id',
+        'role',
+        'gender',
+        'birthdate'
     ];
 
 
-    public function role()
+    // public function role()
+    // {
+    //     return $this->belongsTo(Role::class,'role');
+    // }
+
+    
+    public function shop()
     {
-        return $this->belongsTo(Role::class,'role_id');
+        // return $this->hasOne(Shop::class, 'owner');
+        return $this->hasOne(Shop::class);
+    }
+
+    public function location()
+    {
+        // return $this->hasOne(Shop::class, 'owner');
+        return $this->belongsTo(Location::class);
     }
 
 
@@ -35,3 +51,5 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 }
+
+

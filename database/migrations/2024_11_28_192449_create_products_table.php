@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('description');
             $table->double('price', 8, 2);  // Fixed precision for price (8 digits, 2 decimals)
             $table->integer('available_numbers');
-            $table->string('image_url');
+            $table->string('image');
             
             // Add the missing columns for category_id and brand_id
             $table->unsignedBigInteger('category_id');  // This creates the category_id column
@@ -31,9 +31,9 @@ return new class extends Migration
             
 
             // Add the foreign key constraints after the columns are defined
-            $table->foreign('category_id')->references('id')->on('categories')->nullOnDelete('cascade');
-            $table->foreign('brand_id')->references('id')->on('brands')->nullOnDelete();
-            $table->foreign('shop_id')->references('id')->on('shops')->cascadeOnDelete();
+            $table->foreign('category_id')->references('id')->on('categories')->OnDelete('cascade');
+            $table->foreign('brand_id')->references('id')->on('brands')->OnDelete();
+            $table->foreign('shop_id')->references('id')->on('shops')->OnDelete();
             
 
 

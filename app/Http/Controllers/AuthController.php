@@ -19,7 +19,6 @@ class AuthController extends Controller
     {
         try {
             $validated =   $request->validate([
-                'role' => 'nullable|string|in:user,admin,super admin',
                 'phonenumber' => 'required|string|unique:users',
                 'password' => 'required|string|min:8',
                 'email' => 'required|email|string|unique:users',
@@ -49,7 +48,6 @@ class AuthController extends Controller
 
             // Create user
             $user = User::create([
-                'role' => $request->role ?? 'user',
                 'phonenumber' => $request->phonenumber,
                 'password' => $hashedPassword,
                 'email' => $request->email,

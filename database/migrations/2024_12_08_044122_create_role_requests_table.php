@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('shops', function (Blueprint $table) {
+        Schema::create('role_requests', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('owner');
-            $table->foreign(columns: 'owner')->references('id')->on('users')->onDelete('cascade');
-            $table->string('image');
+            $table->string('status')->default('pending');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign( 'user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shops');
+        Schema::dropIfExists('role_requests');
     }
 };

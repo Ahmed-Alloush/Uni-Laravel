@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Location>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\RoleRequest>
  */
-class LocationFactory extends Factory
+class RoleRequestFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,9 +17,7 @@ class LocationFactory extends Factory
     public function definition()
     {
         return [
-            'country' => 'Syria',
-            'city' => 'Alrohaiba',
-            'street_address'=> 'The public street'
+            //
         ];
     }
 }

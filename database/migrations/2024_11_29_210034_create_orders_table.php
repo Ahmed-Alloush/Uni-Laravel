@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user');  // Foreign key for the user placing the order
-            $table->foreign('user')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');  // Foreign key for the user placing the order
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('location_id');  // Foreign key for the user placing the order
+            $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
             $table->string('status')->default('pending');  // Status of the order
-            $table->decimal('total_amount', 10, 2);  // Total cost of the order
-            $table->text('address')->nullable();  // Delivery address
-
+            $table->decimal('total_price', 10, 2)->default(0);  // Total cost of the order
             $table->timestamps();
         });
     }

@@ -13,15 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('shops', function (Blueprint $table) {
+        Schema::create('carts', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('owner');
-            $table->foreign(columns: 'owner')->references('id')->on('users')->onDelete('cascade');
-            $table->string('image');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign(columns: 'user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
+
+
+    
 
     /**
      * Reverse the migrations.
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shops');
+        Schema::dropIfExists('carts');
     }
 };

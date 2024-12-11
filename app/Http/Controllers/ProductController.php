@@ -93,7 +93,7 @@ public function getAllProducts(Request $request){
                 'name' => 'required|string|max:255',
                 'description' => 'required|string|max:1000',
                 'price' => 'required|numeric|min:0',
-                'available_numbers' => 'required|integer|min:0',
+                'quantity' => 'required|integer|min:0',
                 'category_id' => 'required|exists:categories,id',
                 'brand_id' => 'required|exists:brands,id',
                 'product_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
@@ -111,7 +111,7 @@ public function getAllProducts(Request $request){
                 'name' => $request->name,
                 'description' => $request->description,
                 'price' => $request->price,
-                'available_numbers' => $request->available_numbers,
+                'quantity' => $request->quantity,
                 'image' => $imageUrl,
                 'category_id' => $request->category_id,
                 'brand_id' => $request->brand_id,
@@ -124,7 +124,7 @@ public function getAllProducts(Request $request){
                 'data' => $product,
             ], 201);
         } catch (Exception $e) {
-            return response()->json(['message' => 'this is just for debbuging in error handling', 'image' => $request->hasFile('product_image'), 'category' => $request->category_id, 'brand' => $request->brand_id], 500);
+            // return response()->json(['message' => 'this is just for debbuging in error handling', 'image' => $request->hasFile('product_image'), 'category' => $request->category_id, 'brand' => $request->brand_id], 500);
 
             return response()->json(['error' => 'Failed to create product.', 'message' => $e->getMessage()], 500);
         }
@@ -179,7 +179,7 @@ public function getAllProducts(Request $request){
                 'name' => 'required|string|max:255',
                 'description' => 'required|string|max:1000',
                 'price' => 'required|numeric|min:0',
-                'available_numbers' => 'required|integer|min:0',
+                'quantity' => 'required|integer|min:0',
                 'category_id' => 'required|exists:categories,id',
                 'brand_id' => 'required|exists:brands,id',
                 'product_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
@@ -201,7 +201,7 @@ public function getAllProducts(Request $request){
                 'name' => $request->name,
                 'description' => $request->description,
                 'price' => $request->price,
-                'available_numbers' => $request->available_numbers,
+                'quantity' => $request->quantity,
                 'image' => $imageUrl,
                 'category_id' => $request->category_id,
                 'brand_id' => $request->brand_id,

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -17,8 +18,19 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+
+        $hashedPassword = Hash::make('0940468172mtn');
+
         return [
-            
+            'phonenumber' => '0988795525',
+            'password' => $hashedPassword,
+            'email' => 'ahmed0940468172mtn@gmail.com',
+            'first_name' => 'Ahmed',
+            'last_name' => 'Alloush',
+            'birthdate' => '2004/07/01',
+            'gender' => 'male',
+            'role' => 'super admin',
+            'location_id' =>'1'
         ];
     }
 
@@ -29,7 +41,7 @@ class UserFactory extends Factory
      */
     public function unverified()
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

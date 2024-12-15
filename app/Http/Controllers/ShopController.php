@@ -4,6 +4,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CreditCard;
 use App\Models\Shop;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -38,13 +39,57 @@ class ShopController extends Controller
     {
 
         try {
+
+
+
             // Validate request
-            $request->validate([
+            $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'image_logo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+                'full_name' => 'required|string|max:255',
+                'card_number' => 'required|string|size:16',
+                'expiration_date' => 'required|string',
+                'ccv' => 'required|string|size:3',
             ]);
 
             // return response()->json(['message'=>'this is just for debbuging' ,'image'=>$request->hasFile('image_logo')],200);
+
+
+
+
+
+            $creditCard = CreditCard::where([
+                'full_name' => $validated['full_name'],
+                'card_number' => $validated['card_number'],
+                'expiration_date' => $validated['expiration_date'],
+                'ccv' => $validated['ccv'],
+                // 'user_id' =>$request->user()->id,
+            ])->first();
+
+            if (!$creditCard) {
+                return response()->json(['success' => false, 'message' => 'Credit card not found'], 404);
+            }
+
+            $creditCard->user_id = $request->user()->id;
+
+            $creditCard->save();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -112,12 +157,41 @@ class ShopController extends Controller
             }
 
             // Validation can be added here if needed
-            $request->validate([
+            $validated = $request->validate([
                 'name' => 'sometimes|required|string|max:255',
                 'image_logo' => 'image|mimes:jpeg,png,jpg|max:2048',
+                'full_name' => 'required|string|max:255',
+                'card_number' => 'required|string|size:16',
+                'expiration_date' => 'required|string',
+                'ccv' => 'required|string|size:3',
             ]);
 
+            $creditCard = CreditCard::find($request->user()->id);
 
+            if (!$creditCard) {
+                return response()->json(['success' => false, 'message' => 'Credit card not found'], 404);
+            }
+
+            $creditCard->user_id = null;
+
+            $creditCard->save();
+
+
+            $creditCard = CreditCard::where([
+                'full_name' => $validated['full_name'],
+                'card_number' => $validated['card_number'],
+                'expiration_date' => $validated['expiration_date'],
+                'ccv' => $validated['ccv'],
+                // 'user_id' =>$request->user()->id,
+            ])->first();
+
+            if (!$creditCard) {
+                return response()->json(['success' => false, 'message' => 'Credit card not found'], 404);
+            }
+
+            $creditCard->user_id = $request->user()->id;
+
+            $creditCard->save();
 
 
 
@@ -174,6 +248,20 @@ class ShopController extends Controller
             if ($request->user()->id !== $shop->owner && $request->user()->role !== 'super admin') {
                 return response()->json(['error' => 'Permission denied'], 403);
             }
+
+
+
+            $creditCard = CreditCard::find($request->user()->id);
+
+            if (!$creditCard) {
+                return response()->json(['success' => false, 'message' => 'Credit card not found'], 404);
+            }
+
+            $creditCard->user_id = null;
+
+            $creditCard->save();
+
+
 
             // Delete image if exists
             if ($shop->image) {

@@ -4,12 +4,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CreditCardController;
 use App\Http\Controllers\FavoriteListController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleRequestController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
+use App\Models\CreditCard;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -83,7 +85,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/favoritelist/removefromfavoritelist/{productId}', [FavoriteListController::class, 'RemoveFromMyFavoriteList']);
     Route::delete('/favoritelist/deletefavoritelist', [FavoriteListController::class, 'deleteMyFavoriteList']);
 
-    // this is for shop
+
+   
+    // this is for Payment methods
+    
+    Route::post('/creditcard/execute_payment', [CreditCardController::class,'executePayment']);
+    Route::post('/creditcard/refundmoneytocustomer', [CreditCardController::class,'refundMoneyToCustomer']);
+
+
+
+    // this is for shop     refundMoneyToCustomer
 
     Route::middleware('checkRole:admin,super admin')->group(function () {
         Route::post('/shops', [ShopController::class, 'store']);
@@ -94,7 +105,6 @@ Route::middleware('auth:sanctum')->group(function () {
         // Route::post('shops/{shopId}/products/edite/{productId}', [ProductController::class, 'edite']);
         // Route::delete('shops/{shopId}/products/{productId}', [ProductController::class, 'destroy']);
 
-        // Route::apiResource('/brand', BrandController::class);
 
         Route::post('/brand', [BrandController::class, 'store']);
         Route::post('/brand/edite/{id}', [BrandController::class, 'update']);

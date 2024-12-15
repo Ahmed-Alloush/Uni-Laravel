@@ -19,7 +19,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('location_id');  // Foreign key for the user placing the order
             $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
-            $table->string('status')->default('pending');  // Status of the order
+            $table->string('payment_status')->default('not paid');  // Status of the order
+            $table->string('payment_way')->default('cash');  // Status of the order
             $table->decimal('total_price', 10, 2)->default(0);  // Total cost of the order
             $table->timestamps();
         });

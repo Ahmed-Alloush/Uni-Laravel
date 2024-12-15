@@ -27,12 +27,11 @@ class User extends Authenticatable
     ];
 
 
-    // public function role()
-    // {
-    //     return $this->belongsTo(Role::class,'role');
-    // }
+    public function creditCard()
+    {
+        return $this->hasOne(CreditCard::class,'user_id');
+    }
 
-    
     public function shop()
     {
         // return $this->hasOne(Shop::class, 'owner');
@@ -45,11 +44,8 @@ class User extends Authenticatable
         return $this->belongsTo(Location::class);
     }
 
-
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 }
-
-

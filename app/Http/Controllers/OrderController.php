@@ -39,6 +39,7 @@ class OrderController extends Controller
             'country' => 'nullable|string',
             'city' => 'nullable|string',
             'streetAddress' => 'nullable|string',
+            'payment_way' => 'nullable|string|in:cash,credit card',
         ]);
 
         $location = null;
@@ -85,6 +86,7 @@ class OrderController extends Controller
                 ]);
             } else {
                 return response()->json([
+                    'status' => 'failed',
                     'message' => 'Insufficient stock for product: ' . $productModel->name,
                 ], 400);
             }
@@ -104,6 +106,7 @@ class OrderController extends Controller
         $order->update(['total_price' => $totalPrice]);
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Order placed successfully',
             'order' => $order,
         ]);
@@ -141,6 +144,7 @@ class OrderController extends Controller
             'country' => 'nullable|string',
             'city' => 'nullable|string',
             'streetAddress' => 'nullable|string',
+            'payment_way' => 'nullable|string|in:cash,credit card',
         ]);
 
         // Handle location update
@@ -252,26 +256,37 @@ class OrderController extends Controller
             'id' => $orderId,
             'user_id' => $request->user()->id,
         ])->with('products')->first();
-    
+
         if (!$order) {
             return response()->json([
                 'status' => 'failed',
                 'message' => 'Order not found or you do not have permission to delete it.',
             ], 404);
         }
-    
-        // Check if the order is deletable (e.g., status is pending)
-        if ($order->status !== 'pending') {
+
+
+        $orderCreatedAt = Carbon::parse($order->created_at);
+        $currentTime = Carbon::now();
+
+        if ($orderCreatedAt->diffInMinutes($currentTime) >= 60) {
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Only pending orders can be deleted.',
+                'message' => 'You can only delete your order one hour after it was created.',
             ], 403);
         }
-    
+        
+        // Check if the order is deletable (e.g., status is pending)
+        // if ($order->payment_status !== 'not paid') {
+        //     return response()->json([
+        //         'status' => 'failed',
+        //         'message' => 'Only not paid orders can be deleted.',
+        //     ], 403);
+        // }
+
         // Restore stock for all products in the order
         foreach ($order->products as $product) {
             $productModel = Product::find($product->id);
-    
+
             if ($productModel) {
                 $restoredQuantity = $product->pivot->quantity;
                 $productModel->update([
@@ -279,19 +294,18 @@ class OrderController extends Controller
                 ]);
             }
         }
-    
+
         // Detach all products from the order
         $order->products()->detach();
-    
+
         // Delete the order
         $order->delete();
-    
+
         return response()->json([
             'status' => 'success',
             'message' => 'Order deleted successfully.',
         ]);
     }
-    
 }
 
 
